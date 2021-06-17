@@ -229,6 +229,9 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             case 28:
                 position.set(Position.PREFIX_TEMP + (id - 24 + 4), readValue(buf, length, true) * 0.1);
                 break;
+            case 53:
+                position.set(Position.PREFIX_IO + id, readValue(buf, length, true));
+                break;
             case 66:
                 position.set(Position.KEY_POWER, readValue(buf, length, false) * 0.001);
                 break;
