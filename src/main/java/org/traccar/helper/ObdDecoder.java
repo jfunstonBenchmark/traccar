@@ -100,7 +100,7 @@ public final class ObdDecoder {
             case 0x1F:
                 return createEntry("runTime", value);
             case 0xA6:
-                return createEntry("OBDODO", Integer.valueOf(value));
+                return createEntry("OBDODO", value);
             default:
                 return null;
         }
