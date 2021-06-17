@@ -186,7 +186,11 @@ public class DmtProtocolDecoder extends BaseProtocolDecoder {
 
                     if (!BitUtil.check(input, 1)) {
                         position.set(Position.KEY_ALARM, Position.ALARM_LOW_BATTERY);
-                    } else if (BitUtil.check(input, 6)) {
+                        position.set("LowBattery", 1);
+                    } else {
+                        position.set("LowBattery", 0);
+                    }
+                    if (BitUtil.check(input, 6)) {
                         position.set(Position.KEY_ALARM, Position.ALARM_TAMPERING);
                     }
 
@@ -231,7 +235,9 @@ public class DmtProtocolDecoder extends BaseProtocolDecoder {
                     position.set(Position.KEY_HOURS, buf.readUnsignedIntLE() * 1000);
 
                 }
-
+                if (fieldEnd > recordEnd){
+                    fieldEnd = recordEnd;
+                }
                 buf.readerIndex(fieldEnd);
 
             }
