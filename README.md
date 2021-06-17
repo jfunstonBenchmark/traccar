@@ -1,3 +1,6 @@
+Copy of Traccar with minor changes for our needs in the decoders. 
+
+
 # [Traccar](https://www.traccar.org)
 
 ## Overview
