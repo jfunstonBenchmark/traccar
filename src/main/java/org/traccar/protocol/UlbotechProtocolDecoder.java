@@ -248,9 +248,24 @@ public class UlbotechProtocolDecoder extends BaseProtocolDecoder {
 
                 case DATA_LBS:
                     if (length == 11) {
+                        int MCC = buf.readUnsignedShort();
+                        int MNC = buf.readUnsignedShort();
+                        int LAC = buf.readUnsignedShort();
+                        long CID = buf.readUnsignedInt();
+                        int RS = -buf.readUnsignedByte();
+                        String concat = Integer.toString(MCC) + Integer.toString(MNC);
+                        int operator = Integer.parseInt(concat);
+                        
+                        position.set("MCC", MCC);
+                        position.set("MNC", MNC);
+                        position.set("LAC", LAC);
+                        position.set("CID", CID);
+                        position.set("RSSI", RS);
+                        position.set("operator", operator);
+                        
                         position.setNetwork(new Network(CellTower.from(
-                                buf.readUnsignedShort(), buf.readUnsignedShort(),
-                                buf.readUnsignedShort(), buf.readUnsignedInt(), -buf.readUnsignedByte())));
+                                MCC, MNC,
+                                LAC, CID, RS)));
                     } else {
                         position.setNetwork(new Network(CellTower.from(
                                 buf.readUnsignedShort(), buf.readUnsignedShort(),
