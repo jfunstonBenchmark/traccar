@@ -97,6 +97,10 @@ public final class ObdDecoder {
                 return createEntry(Position.KEY_FUEL_LEVEL, convert ? value * 100 / 255 : value);
             case 0x31:
                 return createEntry("clearedDistance", value);
+            case 0x1F:
+                return createEntry("runTime", value);
+            case 0xA6:
+                return createEntry("OBDODO", Integer.valueOf(value));
             default:
                 return null;
         }
