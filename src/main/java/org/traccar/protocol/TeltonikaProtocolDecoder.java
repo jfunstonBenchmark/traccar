@@ -55,7 +55,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
     public TeltonikaProtocolDecoder(Protocol protocol, boolean connectionless) {
         super(protocol);
         this.connectionless = connectionless;
-        this.extended = Context.getConfig().getBoolean(Keys.PROTOCOL_EXTENDED.withPrefix(getProtocolName()));
+        this.extended = Context.getConfig().getBoolean(getProtocolName() + ".extended");
     }
 
     private void parseIdentification(Channel channel, SocketAddress remoteAddress, ByteBuf buf) {
@@ -229,8 +229,32 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             case 28:
                 position.set(Position.PREFIX_TEMP + (id - 24 + 4), readValue(buf, length, true) * 0.1);
                 break;
+            case 31:
+                position.set(Position.KEY_ENGINE_LOAD, readValue(buf, length, false));
+                break;
+            case 36:
+                position.set("engRPM", readValue(buf, length, false));
+                break;
+            case 42:
+                position.set("runTime", readValue(buf, length, false));
+                break;
+            case 43:
+                position.set("distMilOn", readValue(buf, length, false));
+                break;
+            case 48:
+                position.set("fuelLevel", readValue(buf, length, false));
+                break;
+            case 50:
+                position.set("barometPressure", readValue(buf, length, false));
+                break;
             case 53:
-                position.set(Position.PREFIX_IO + id, readValue(buf, length, true));
+                position.set("airTemp", readValue(buf, length, true));
+                break;
+            case 58:
+                position.set("engOilTemp", readValue(buf, length, false));
+                break;
+            case 60:
+                position.set("fuelRate", readValue(buf, length, false));
                 break;
             case 66:
                 position.set(Position.KEY_POWER, readValue(buf, length, false) * 0.001);
@@ -244,6 +268,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             case 72:
             case 73:
             case 74:
+            case 75:
                 position.set(Position.PREFIX_TEMP + (id - 71), readValue(buf, length, true) * 0.1);
                 break;
             case 78:
@@ -286,9 +311,33 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             case 199:
                 position.set(Position.KEY_ODOMETER_TRIP, readValue(buf, length, false));
                 break;
+            case 205:
+                position.set("cellID", readValue(buf, length, false));
+                break;
+            case 206:
+                position.set("cellLAC", readValue(buf, length, false));
+                break;
             case 236:
                 if (readValue(buf, length, false) == 1) {
                     position.set(Position.KEY_ALARM, Position.ALARM_GENERAL);
+                }
+                break;
+            case 237:
+                position.set("motion", readValue(buf, length, false) == 0);
+                break;
+            case 238:
+                switch ((int) readValue(buf, length, false)) {
+                    case 1:
+                        position.set(Position.KEY_ALARM, Position.ALARM_ACCELERATION);
+                        break;
+                    case 2:
+                        position.set(Position.KEY_ALARM, Position.ALARM_BRAKING);
+                        break;
+                    case 3:
+                        position.set(Position.KEY_ALARM, Position.ALARM_CORNERING);
+                        break;
+                    default:
+                        break;
                 }
                 break;
             case 239:
@@ -378,8 +427,8 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
     }
 
     private void decodeNetwork(Position position) {
-        long cid = position.getLong(Position.PREFIX_IO + 205);
-        int lac = position.getInteger(Position.PREFIX_IO + 206);
+        long cid = position.getLong("cellID");
+        int lac = position.getInteger("cellLAC");
         if (cid != 0 && lac != 0) {
             CellTower cellTower = CellTower.fromLacCid(lac, cid);
             long operator = position.getInteger(Position.KEY_OPERATOR);
