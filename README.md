@@ -1,7 +1,14 @@
 Copy of Traccar with minor changes for our needs in the decoders. 
+
 ## Changed Files for Our System: 
--Decoders: UlbotecProtocolDecoder, DmtDecoder, TeltonikaDecoder
--Helpers: ObdDecoder
+
+Decoders: 
+-UlbotecProtocolDecoder, 
+-DmtDecoder, 
+-TeltonikaDecoder
+
+Helpers: 
+-ObdDecoder
 
 
 ## End of changes from original 
