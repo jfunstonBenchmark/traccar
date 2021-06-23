@@ -12,8 +12,8 @@ Helpers: <BR>
 <BR>
 
 ## End of changes from original 
-    <BR>
-##Process to update:
+
+## Process to update:
 -Compile latest copy of Traccar with updated files into JAR file. 
 <BR>
 -Extract all compiled files from the new JAR file (jar -xvf filename.jar)
@@ -24,7 +24,7 @@ Helpers: <BR>
 <BR>
 -Replace the files in our server JAR file with these compiled ones using jar uf jar-file org/traccar/....../file.class
     
-##End Updates
+## End Updates
     
    
     
