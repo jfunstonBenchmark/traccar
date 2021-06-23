@@ -12,6 +12,26 @@ Helpers: <BR>
 <BR>
 
 ## End of changes from original 
+    <BR>
+##Process to update:
+-Compile latest copy of Traccar with updated files into JAR file. 
+<BR>
+-Extract all compiled files from the new JAR file (jar -xvf filename.jar)
+<BR>
+-Download a copy of the compiled server JAR file from our server into a new folder
+<BR>
+-From the folder of that JAR file, create the folder structure matching the updated files (org/traccar/protocol/), etc. And, copy those files into their applicable places
+<BR>
+-Replace the files in our server JAR file with these compiled ones using jar uf jar-file org/traccar/....../file.class
+    
+##End Updates
+    
+   
+    
+    
+    
+
+
 
 
 
