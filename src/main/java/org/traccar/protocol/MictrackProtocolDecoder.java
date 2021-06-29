@@ -102,7 +102,7 @@ public class MictrackProtocolDecoder extends BaseProtocolDecoder {
         position.set(Position.KEY_BATTERY, Integer.parseInt(values[index++]) * 0.001);
     }
 
-    private void decodeCell(Network network, String data) {
+    private void decodeCell(Position position, Network network, String data) {
         String[] values = data.split(",");
         int length = values.length % 5 == 0 ? 5 : 4;
         for (int i = 0; i < values.length / length; i++) {
@@ -110,14 +110,25 @@ public class MictrackProtocolDecoder extends BaseProtocolDecoder {
             int cid = Integer.parseInt(values[i * length + 1]);
             int lac = Integer.parseInt(values[i * length + 2]);
             int mcc = Integer.parseInt(values[i * length + 3]);
+            int pcid = Integer.parseInt(values[i * length + 4]);
+            position.set("MCC", mcc);
+            position.set("MNC", mnc);
+            position.set("CID", cid);
+            position.set("LAC", lac);
+            position.set("PCID", pcid);
+            String concat = Integer.toString(mcc) + Integer.toString(mnc);
+            int operator = Integer.parseInt(concat);
+            position.set("operator", operator);
             network.addCellTower(CellTower.from(mcc, mnc, lac, cid));
         }
     }
 
-    private void decodeWifi(Network network, String data) {
+    private void decodeWifi(Position position, Network network, String data) {
         String[] values = data.split(",");
         for (int i = 0; i < values.length / 2; i++) {
             network.addWifiAccessPoint(WifiAccessPoint.from(values[i * 2], Integer.parseInt(values[i * 2 + 1])));
+            position.set("WIFIMAC" + i, values[i * 2]);
+            position.set("WIFIMACRSSI" + i, Integer.valueOf(Integer.parseInt(values[i * 2 + 1])));
         }
     }
 
@@ -130,11 +141,11 @@ public class MictrackProtocolDecoder extends BaseProtocolDecoder {
         Network network = new Network();
 
         if (hasWifi) {
-            decodeWifi(network, values[index++]);
+            decodeWifi(position, network, values[index++]);
         }
 
         if (hasCell) {
-            decodeCell(network, values[index++]);
+            decodeCell(position, network, values[index++]);
         }
 
         position.setNetwork(network);
