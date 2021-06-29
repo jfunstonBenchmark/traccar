@@ -6,6 +6,7 @@ Decoders: <BR>
 -UlbotecProtocolDecoder, <BR>
 -DmtDecoder, <BR>
 -TeltonikaDecoder<BR>
+-MictrackProtocolDecoder
 <BR>
 Helpers: <BR>
 -ObdDecoder<BR>
